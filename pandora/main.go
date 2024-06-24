@@ -44,7 +44,8 @@ func main() {
 	vm, _ := mem.VirtualMemory()
 	currentUser, _ := user.Current()
 
-	title := "  " + xterm256.Sprintf(xterm256.Red, "こんにちは世界")
+	user := "  " + xterm256.Sprintf(xterm256.Red, fmt.Sprintf("%s@%s", currentUser.Username, data.Hostname))
+	title1 := "  " + xterm256.Sprintf(xterm256.Red, "こんにちは世界")
 	os := "  " + "  " + xterm256.Sprintf(xterm256.Magenta, data.OS)
 	kernel := "  " + "  " + xterm256.Sprintf(xterm256.Magenta, data.KernelVersion)
 	uptimeCmd, _ := exec.Command("uptime", "-p").Output()
@@ -52,13 +53,13 @@ func main() {
 	termCmd, _ := exec.Command("/bin/sh", "-c", "echo $TERM").Output()
 	terminal := "  " + "  " + xterm256.Sprintf(xterm256.Magenta, strings.TrimSpace(string(termCmd)))
 	shell := "  " + "  " + xterm256.Sprintf(xterm256.Magenta, user_shell.GetUserShell())
-	user := "  " + xterm256.Sprintf(xterm256.Red, fmt.Sprintf("%s@%s", currentUser.Username, data.Hostname))
+	title2 := "  " + xterm256.Sprintf(xterm256.Red, "ハードウェア")
 	cpu := "  " + "  " + xterm256.Sprintf(xterm256.Magenta, cpuName)
 	memory := "  " + "﬙  " + xterm256.Sprintf(xterm256.Magenta, fmt.Sprintf("%dMB / %dMB (%.2f%%%%)", vm.Used, vm.Total, vm.UsedPercent))
 
 	t := table.NewWriter()
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.LightGray, "")})
-	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "             ⠀⠀⠤⣄⠀⠀⠀⠀⠀"), title})
+	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "             ⠀⠀⠤⣄⠀⠀⠀⠀⠀"), title1})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⡇⠀⠀⠀⠀"), "┌───────────────────────────────────────────────┐"})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠀⠀⠀⠀⢀⣤⣴⣶⣶⣶⣶⣶⣦⣤⡄⠊⠀⠀⠀⠀⠀"), os})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠀⠦⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⠀⠀⠀"), kernel})
@@ -67,7 +68,7 @@ func main() {
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⣠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧⠀"), shell})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠉⢹⣿⣿⢓⣺⡿⠟⠛⠛⢻⣿⣼⣿⣿⣿⣿⣿⣿⣇⠀"), "└───────────────────────────────────────────────┘"})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠀⢸⣿⣿⠉⠀⠀⠀⠀⠀⠀⠀⠈⢀⣿⡿⠿⢿⣿⣿⣿⠀")})
-	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⡀⠈⣿⣿⡀⠀⠀⠠⠄⠀⠀⠀⠀⢸⣿⣗⠏⢪⣿⣿⣿⡇"), user})
+	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⡀⠈⣿⣿⡀⠀⠀⠠⠄⠀⠀⠀⠀⢸⣿⣗⠏⢪⣿⣿⣿⡇"), title2})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠀⢀⡈⣿⣷⣤⣄⣀⠀⠀⠀⢀⣤⣿⣿⣷⣾⣿⣿⣿⣿⣧"), "┌───────────────────────────────────────────────┐"})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠀⠘⠉⢹⣿⣿⣿⣿⣿⡇⠀⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"), cpu})
 	t.AppendRow(table.Row{xterm256.Sprintf(xterm256.Cyan, "⠀⠀⠀⣾⣿⣿⠟⡿⠟⡁⠄⠚⠉⠀⠘⢿⣿⣿⣿⣿⣿⡇"), memory})
@@ -77,6 +78,6 @@ func main() {
 
 	t.SetStyle(table.StyleLight)
 	t.Style().Title.Align = text.AlignCenter
-	t.SetTitle(xterm256.Sprintf(xterm256.Cyan, "chenfetch"))
+	t.SetTitle(xterm256.Sprintf(xterm256.Cyan, user))
 	fmt.Println(t.Render())
 }
